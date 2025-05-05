@@ -32,9 +32,7 @@ k6-health-checks/
 
 ## ⚙️ Setup Instructions
 
-### 1. Install k6
-
-On Ubuntu / Pop!_OS:
+### Install k6 (Debian example)
 
 ```bash
 sudo apt update
