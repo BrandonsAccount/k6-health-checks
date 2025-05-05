@@ -47,8 +47,8 @@ sudo apt install k6 -y
 
 ---
 
-## Add Team Config Files
-Each team maintains their own configs/team-*.json file:
+## 🧩 Add Team Config Files
+Each team maintains their own tests/*.json file:
 ```
 [
   { "name": "My API", "url": "https://my-api.example.com/health" },
@@ -58,7 +58,7 @@ Each team maintains their own configs/team-*.json file:
 
 ---
 
-## Build Process
+## 🛠️ Build Process
 ```bash
 # take all team configs and merge them into one
 ./build.sh
@@ -66,7 +66,7 @@ Each team maintains their own configs/team-*.json file:
 
 ---
 
-## Run the Tests
+## 🚀 Run the Tests
 ```bash
 k6 run upime-check.js
 ```
