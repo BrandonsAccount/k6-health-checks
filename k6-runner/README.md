@@ -1,10 +1,7 @@
-# 🔍 Distributed Website Health Checks with k6 & Otel Collector
+# 🔍 Distributed Website Health Checks with k6
 
 This project uses [Grafana k6](https://k6.io/) to run **scalable HTTP health checks** against hundreds of endpoints across multiple teams and services. It's designed to be simple, composable, and CI-friendly — no complex infrastructure required.
 Each virtual user (VU) will run one health check in parallel.
-
-Health checks are pushed to an Otel Collector, which can then be configured to send metrics to various backends like 
-Datadog or Prometheus. An example Otel Collector config is provided in the `otel-collector` directory.
 
 ---
 
@@ -13,14 +10,12 @@ Datadog or Prometheus. An example Otel Collector config is provided in the `otel
 - 🧪 Parallel health checks using k6 virtual users
 - 📁 Per-team configuration files (no merge conflicts)
 - 🧩 Automatic config merging for scalability
-- 🐳 Easy to containerize or run in CI pipelines
-- 📊 Built-in report scripts to validate OTEL Collector
 - 📊 Optional integration with Datadog or Prometheus (loosely coupled)
-
+- 🐳 Easy to containerize or run in CI pipelines
 
 ---
 
-## 📂 k6-runner Directory Structure
+## 📂 Directory Structure
 ```
 k6-health-checks/
 ├── tests/ # One config file per team
@@ -29,22 +24,29 @@ k6-health-checks/
 │ └── ...
 ├── merged-endpoints.json # Auto-generated merged config
 ├── multi-health-check.js # Generic k6 test script
-└── build.sh # Merges all team configs into one
-```
-
-📂 otel-collector Directory Structure
-```
-otel-collector/
-├── Dockerfile # Dockerfile for the Otel Collector
-└── otel-collector-config.yaml # Example config for the Otel Collector
+├── merge-configs.sh # Merges all team configs into one
+└── README.md # You're here
 ```
 
 ---
 
 ## ⚙️ Setup Instructions
 
-### 🧩 Modify Team Config Files
-Each team maintains their own tests/*.json file by submitting files via merge request:
+### Install k6 (Debian example)
+
+```bash
+sudo apt update
+sudo apt install gnupg curl -y
+curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+sudo apt update
+sudo apt install k6 -y
+```
+
+---
+
+## 🧩 Add Team Config Files
+Each team maintains their own tests/*.json file:
 ```
 [
   { "name": "My API", "url": "https://my-api.example.com/health" },
@@ -54,15 +56,15 @@ Each team maintains their own tests/*.json file by submitting files via merge re
 
 ---
 
-## 🚀 Run the Containers
+## 🛠️ Build Process
 ```bash
-docker compose up
+# take all team configs and merge them into one
+./build.sh
 ```
 
-## 📊 Report on OTEL Collector
-This is still a bit crude and requies `pip install pandas`
-```bash
-./reports/summary.py
+---
 
-# or 
-./reports/timeseries.py
+## 🚀 Run the Tests
+```bash
+k6 run upime-check.js
+```

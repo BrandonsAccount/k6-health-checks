@@ -1,0 +1,21 @@
+services:
+  otel-collector:
+    build:
+      context: ./otel-collector
+    ports:
+      - "4318:4318"
+    container_name: otel
+    volumes:
+      - /tmp:/output
+
+
+  k6:
+    build:
+      context: ./k6-runner
+    environment:
+      - K6_OTEL_EXPORTER_TYPE=http
+      - K6_OTEL_HTTP_EXPORTER_ENDPOINT=otel:4318
+      - K6_OTEL_HTTP_EXPORTER_INSECURE=true
+    command: ["run", "--out", "experimental-opentelemetry", "uptime-check.js"]
+    depends_on:
+      - otel-collector

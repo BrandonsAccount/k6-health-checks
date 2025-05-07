@@ -1,4 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
-#!/bin/bash
 jq -s 'flatten' tests/*.json > merged-endpoints.json

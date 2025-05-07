@@ -1,0 +1,27 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: "0.0.0.0:4318"
+      grpc:
+
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+  file:
+    path: /output/otel-metrics.json
+    format: json
+  # datadog:
+  #   api:
+  #     site: datadoghq.com
+  #     key: ${DD_API_KEY}
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [file,debug]
